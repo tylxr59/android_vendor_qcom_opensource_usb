@@ -222,7 +222,12 @@ on property:vendor.usb.controller=* && property:vendor.usb.use_gadget_hal=0
    setprop sys.usb.controller ${vendor.usb.controller}
    setprop sys.usb.configfs 1
 
-on boot && property:ro.boot.usbconfigfs=true
+# A bootloader configfs flag must not enable legacy handlers alongside the HAL.
+# Keep the legacy default for products that leave the HAL selection unset.
+on boot && property:ro.boot.usbconfigfs=true && property:vendor.usb.use_gadget_hal=0
+        setprop sys.usb.configfs 1
+
+on boot && property:ro.boot.usbconfigfs=true && property:vendor.usb.use_gadget_hal=
         setprop sys.usb.configfs 1
 
 #
